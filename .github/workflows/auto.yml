@@ -1,0 +1,27 @@
+name: Metrics Engine
+
+on:
+  schedule:
+    - cron: "15 0,12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Generate metrics
+        run: |
+          echo "Metrics snapshot: $(date)" >> metrics.log
+
+      - name: Commit
+        run: |
+          git config --global user.name "KannurAnudeepRaj"
+          git config --global user.email "KannurAnudeepRaj@gmail.com"
+          git add .
+          git commit -m "Metrics update $(date)" || echo "No change"
+          git push
